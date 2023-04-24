@@ -6,6 +6,4 @@ services:
     project: ./
     host: springapp
     language: java
-infra:
-  provider: terraform
 
