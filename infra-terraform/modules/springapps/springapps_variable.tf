@@ -20,7 +20,6 @@ variable "identity" {
 }
 
 variable "name" {
-  description = "Name of Container App"
+  description = "Azure Spring Apps instance name"
   type        = string
 }
-

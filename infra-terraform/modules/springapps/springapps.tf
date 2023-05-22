@@ -49,9 +49,4 @@ resource "azurerm_spring_cloud_java_deployment" "deployment" {
   }
 
   runtime_version = "Java_11"
-
-  environment_variables = {
-    "Foo" : "Bar"
-    "Env" : "Staging"
-  }
 }
