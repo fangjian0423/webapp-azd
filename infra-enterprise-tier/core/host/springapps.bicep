@@ -24,6 +24,35 @@ resource buildService 'Microsoft.AppPlatform/Spring/buildServices@2023-03-01-pre
   ]
 }
 
+resource asaApp 'Microsoft.AppPlatform/Spring/apps@2022-12-01' = {
+  name: 'helloworld-web'
+  location: location
+  parent: asaInstance
+  identity: {
+      type: 'SystemAssigned'
+    }
+  properties: {
+    public: true
+  }
+}
+
+resource asaDeployment 'Microsoft.AppPlatform/Spring/apps/deployments@2022-12-01' = {
+  name: 'default'
+  parent: asaApp
+  properties: {
+    deploymentSettings: {
+      resourceRequests: {
+        cpu: '1'
+        memory: '2Gi'
+      }
+    }
+    source: {
+      type: 'BuildResult'
+      buildResultId: '<default>'
+    }
+  }
+}
+
 resource buildAgentpool 'Microsoft.AppPlatform/Spring/buildServices/agentPools@2023-03-01-preview' = {
   name: '${asaInstance.name}/default/default'
   properties: {
@@ -67,22 +96,6 @@ resource builder 'Microsoft.AppPlatform/Spring/buildServices/builders@2023-03-01
       id: 'io.buildpacks.stacks.bionic'
       version: 'full'
     }
-  }
-  dependsOn: [
-    asaInstance
-  ]
-}
-
-resource build 'Microsoft.AppPlatform/Spring/buildServices/builds@2022-12-01' = {
-  name: 'asabuild'
-  parent: buildService
-  properties: {
-    agentPool: buildAgentpool.id
-    builder: builder.id
-    env: {
-      BP_JVM_VERSION: 'a=1, b=2'
-    }
-    relativePath: '/'
   }
   dependsOn: [
     asaInstance
